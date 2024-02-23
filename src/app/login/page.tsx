@@ -1,18 +1,32 @@
 "use client"
-import React, { use, useState } from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import {useRouter} from 'next/navigation'
 
 const LoginForm = () => {
+  const router = useRouter()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async() => {
+    // e.preventDefault();
     // Add your login logic here
+    try{
+      
+      const response = await axios.post("./api/user/login",{email:email,password:password})
+      console.log("Login succesfully",response.data)
+      router.push("./profile")
+    }
+    catch(err:any){
+      console.log("Login failed",err.message)
+    }
+
+
   };
 
   return (
     <div className="w-full max-w-md mx-auto mt-8">
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
             Email
@@ -44,7 +58,7 @@ const LoginForm = () => {
         <div className="flex items-center justify-between">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
+            onClick={handleSubmit}
           >
             Sign In
           </button>
@@ -52,7 +66,7 @@ const LoginForm = () => {
             Forgot Password?
           </a>
         </div>
-      </form>
+      </div>
       <p className="text-center text-gray-500 text-xs">
         &copy;2024 Your Company. All rights reserved.
       </p>
